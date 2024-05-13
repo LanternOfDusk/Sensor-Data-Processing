@@ -92,15 +92,25 @@ class MahonyAHRS:
 # MOBIUS 서버 정보 정의
 MOBIUS_HOST = "203.253.128.177"
 MOBIUS_PORT = 7579
-MOBIUS_PATH = "/Mobius/LOD/MPU"
+MOBIUS_PATH = "/Mobius/LOD/MPU/la"
+
+url = "http://" + MOBIUS_HOST + ":" + str(MOBIUS_PORT) + MOBIUS_PATH
+headers = {
+    "Accept": "application/json",
+    "X-M2M-RI": "12345",
+    "X-M2M-Origin": "SKJZkzO42fL"
+}
+
 
 # MOBIUS 서버에서 데이터 가져오기
-response = requests.get(f"http://{MOBIUS_HOST}:{MOBIUS_PORT}{MOBIUS_PATH}")
+response = requests.request("GET", url, headers=headers)
 data = response.json()
 
+print(data)
+
 # gyro와 accel 값을 추출하여 리스트로 저장
-gyro_values = np.array(data['Gyroscope'])
-accel_values = np.array(data['Accelerometer'])
+gyro_values = np.array(data['m2m:cin']['con']['gyro'])
+accel_values = np.array(data['m2m:cin']['con']['accel'])
 
 # 샘플 주기
 sample_period = 1 / 256
@@ -111,6 +121,7 @@ ahrs = MahonyAHRS(SamplePeriod=sample_period)
 # 선형 가속도 및 각속도 계산
 linAcc = np.zeros_like(accel_values)  # 수정된 부분
 linVel = np.zeros_like(gyro_values)  # 수정된 부분
+
 
 for i in range(len(gyro_values)):
     # AHRS 알고리즘 업데이트
