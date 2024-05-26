@@ -18,25 +18,4 @@ public class Quatern2RotMat {
 
         return R;
     }
-
-    public static void main(String[] args) {
-        // Example usage
-        double[][] q = {
-            {1, 0, 0, 0},
-            {0.7071, 0.7071, 0, 0}
-        };
-
-        double[][][] R = quatern2rotMat(q);
-
-        for (int k = 0; k < R[0][0].length; k++) {
-            System.out.println("Rotation matrix " + (k + 1) + ":");
-            for (int i = 0; i < 3; i++) {
-                for (int j = 0; j < 3; j++) {
-                    System.out.print(R[i][j][k] + " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
-        }
-    }
 }
